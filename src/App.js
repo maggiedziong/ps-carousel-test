@@ -4,13 +4,18 @@ import './App.scss';
 
 class App extends Component {
 
+  // TODO make the currentIndex a dynamic value or reset to 0 after making carousel infinite
+  // Currenly it's set to 2 so that the carousel starts on the left side, 
+  // when set to 0 it would just start in the middle 
   constructor(props) {
     super();
     this.state = {
       images : [],
       loading : false,
       error : null,
-      slideWidth : 300
+      slideWidth : 300,
+      currentIndex : 2, 
+      offset: 0
     }
   }
 
@@ -33,14 +38,43 @@ class App extends Component {
     await this.getImages();
     this.carouselInit();
   }
-
-  // set up carousel track width
+  
   carouselInit = () => {
+    // set up carousel track width
     const imgs = this.state.images.length;
     const width = this.state.slideWidth * imgs;
     const trackWidth = document.getElementsByClassName('carousel-inner')[0];
+    // center active slide 
+    const visibleWidth = document.querySelector('.carousel-wrapper').offsetWidth;
+    const halfSlide = this.state.slideWidth / 2;
+    const centerOffset = (this.state.slideWidth * (this.state.currentIndex + 1)) - halfSlide;
+    const trackOffset = (visibleWidth / 2) - centerOffset;
 
-    trackWidth.style.width = width + 'px'
+    trackWidth.style.width = width + 'px';
+    
+    this.setState(prevState => ({
+      offset: trackOffset
+    }))
+  }
+
+  prevSlide = () => {
+    if(this.state.currentIndex === 0)
+      return;
+
+    this.setState(prevState => ({
+      currentIndex: prevState.currentIndex - 1,
+      offset: prevState.offset + this.state.slideWidth
+    }));
+  }
+
+  nextSlide = () => {
+    if(this.state.currentIndex === this.state.images.length - 1) 
+      return;
+
+    this.setState(prevState => ({
+      currentIndex: prevState.currentIndex + 1,
+      offset: prevState.offset - this.state.slideWidth
+    }));
   }
 
   render() {
@@ -49,7 +83,7 @@ class App extends Component {
         <h1>Carousel test</h1>
         <div className="carousel">
           <div className="carousel-wrapper">
-            <div className="carousel-inner">
+            <div className="carousel-inner" style={{transform: `translateX(${this.state.offset}px)`}}>
               {this.state.images.map((image, i) => (
                 <Slide {...image} key={image.id} />
               ))}
@@ -57,8 +91,8 @@ class App extends Component {
           </div>
         </div>
         <div className="button-group">
-          <div className="button previous">Prev</div>
-          <div className="button next">Next</div>
+          <div className="button previous" onClick={this.prevSlide}>Prev</div>
+          <div className="button next" onClick={this.nextSlide}>Next</div>
         </div>
       </div>
     );
