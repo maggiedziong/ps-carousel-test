@@ -11,9 +11,6 @@ import './App.scss';
 
 class App extends Component {
 
-  // TODO make the currentIndex a dynamic value or reset to 0 after making carousel infinite
-  // Currenly it's set to 2 so that the carousel starts on the left side, 
-  // when set to 0 it would just start in the middle 
   constructor(props) {
     super();
     this.state = {
@@ -21,7 +18,7 @@ class App extends Component {
       loading : false,
       error : null,
       slideWidth : 300,
-      currentIndex : 0, 
+      currentIndex : 0, //Can set this to 2 if the carousel should fill full width on load / could work out the number programtically also
       offset: 0
     }
   }
