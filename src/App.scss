@@ -1,0 +1,61 @@
+body, 
+html {
+    height: 100%;
+    background-color: #e9eee6;
+}
+
+.App {
+    h1 {
+        color: #2c73a1;
+        margin: 20px;
+        font-size: 40px;
+    }
+
+    .carousel {
+        width: 100%;
+        max-width: 1500px;
+        padding: 25px 20px;
+        background: white;
+        box-sizing: border-box;
+        margin-bottom: 30px;
+        
+        &-wrapper {
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        &-inner {
+            transition: transform ease-out 0.45s;
+        }
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        width: 100%;    
+
+        .button {
+            overflow: hidden;
+            position: relative; 
+            cursor: pointer;
+            background: #2c73a1;
+            color: white;
+            padding: 6px 20px 8px;
+            font-size: 20px;
+
+            &.previous {
+                padding-left: 25px;
+                border-radius: 12px 0 0 12px;
+                margin-right: 5px;
+            }
+
+            &.next {
+                padding-right: 25px;
+                border-radius: 0 12px 12px 0;
+            }
+        }
+    }
+}
+

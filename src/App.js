@@ -1,6 +1,6 @@
 import React, {Component}  from 'react';
 import Slide from './Slide/Slide';
-import './App.css';
+import './App.scss';
 
 class App extends Component {
 
@@ -9,7 +9,8 @@ class App extends Component {
     this.state = {
       images : [],
       loading : false,
-      error : null
+      error : null,
+      slideWidth : 300
     }
   }
 
@@ -19,15 +20,27 @@ class App extends Component {
       method: 'GET'
     }).then(async (response) => {
       var data = await response.json(); // use await to resolve promise
-      this.setState({images: data.hits});
+      this.setState({images: data.hits}); // filter down to hits here
       console.log(data.hits);
     }).catch(function(err) { //TODO add error handling 
       this.setState({ error: true }); 
     });
   }
 
-  componentDidMount() {
-    this.getImages();
+  // changed to an async function so that we can wait for 
+  // the images before initialising the carousel
+  async componentDidMount() { 
+    await this.getImages();
+    this.carouselInit();
+  }
+
+  // set up carousel track width
+  carouselInit = () => {
+    const imgs = this.state.images.length;
+    const width = this.state.slideWidth * imgs;
+    const trackWidth = document.getElementsByClassName('carousel-inner')[0];
+
+    trackWidth.style.width = width + 'px'
   }
 
   render() {
