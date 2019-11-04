@@ -2,6 +2,13 @@ import React, {Component}  from 'react';
 import Slide from './Slide/Slide';
 import './App.scss';
 
+/* TODO 
+  - add font
+  - add touchevents for mobile
+  - make the carousel infinite?
+  - if making infinite, will need to change positioning to absolute
+*/
+
 class App extends Component {
 
   // TODO make the currentIndex a dynamic value or reset to 0 after making carousel infinite
@@ -14,7 +21,7 @@ class App extends Component {
       loading : false,
       error : null,
       slideWidth : 300,
-      currentIndex : 2, 
+      currentIndex : 0, 
       offset: 0
     }
   }
@@ -37,20 +44,31 @@ class App extends Component {
   async componentDidMount() { 
     await this.getImages();
     this.carouselInit();
+    window.addEventListener('resize', this.centerActive);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.centerActive);
   }
   
+   // set up carousel track width
   carouselInit = () => {
-    // set up carousel track width
     const imgs = this.state.images.length;
     const width = this.state.slideWidth * imgs;
     const trackWidth = document.getElementsByClassName('carousel-inner')[0];
-    // center active slide 
+
+    trackWidth.style.width = width + 'px';
+
+    this.centerActive();
+  }
+
+  // center active slide
+  centerActive = () => {
     const visibleWidth = document.querySelector('.carousel-wrapper').offsetWidth;
     const halfSlide = this.state.slideWidth / 2;
     const centerOffset = (this.state.slideWidth * (this.state.currentIndex + 1)) - halfSlide;
     const trackOffset = (visibleWidth / 2) - centerOffset;
 
-    trackWidth.style.width = width + 'px';
     
     this.setState(prevState => ({
       offset: trackOffset
